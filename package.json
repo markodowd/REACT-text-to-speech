@@ -1,10 +1,13 @@
 {
   "name": "react-text-to-speech",
   "version": "0.0.0",
+  "homepage": "http://markodowd.github.io/REACT-text-to-speech",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "react": "^17.0.2",
@@ -14,6 +17,7 @@
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
     "@vitejs/plugin-react": "^1.0.7",
+    "gh-pages": "^3.2.3",
     "typescript": "^4.4.4",
     "vite": "^2.7.2"
   }
