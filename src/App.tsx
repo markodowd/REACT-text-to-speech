@@ -1,43 +1,49 @@
 import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false)
+  const [speech, setSpeech] = useState('')
+
+  async function getJoke() {
+    const apiUrl =
+      'https://sv443.net/jokeapi/v2/joke/Programming?blacklistFlags=nsfw,racist,sexist&type=single'
+    try {
+      const response = await fetch(apiUrl)
+      const data = await response.json()
+
+      textToSpeech(data.joke)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleClick = () => {
+    setIsButtonDisabled(true)
+    getJoke()
+  }
+
+  const textToSpeech = (joke: string) => {
+    const audioSrc = `http://api.voicerss.org/?key=${
+      import.meta.env.VITE_API_KEY
+    }&src=${joke}`
+    setSpeech(audioSrc)
+  }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+    <div className="container">
+      <button onClick={handleClick} id="button" disabled={isButtonDisabled}>
+        Tell Me A Joke
+      </button>
+      {speech && (
+        <audio
+          onEnded={() => setIsButtonDisabled(false)}
+          src={speech}
+          id="audio"
+          controls
+          hidden
+          autoPlay
+        ></audio>
+      )}
     </div>
   )
 }
